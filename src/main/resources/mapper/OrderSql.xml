@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="data.mapper.OrderMapper">
+	<!-- 주문 정보 -->
+	<insert id="orderInsert" parameterType="odto">
+		insert into tb_order(order_id,orderer,recipient,o_addrnum,o_addr,o_addrdetail,o_hp,o_totalprice,o_note,o_email,o_date)
+		values(#{order_id},#{orderer},#{recipient},#{o_addrnum},#{o_addr},#{o_addrdetail},#{o_hp},#{o_totalprice},#{o_note},#{o_email},now())
+	</insert>
+	<!-- 주문 상세 정보 --> 
+	<insert id="orderDetailInsert" parameterType="String">
+		insert into order_detail (order_id,pro_id,c_qty,c_color,c_size)
+		select #{order_id},pro_id,c_qty,c_color,c_size from cart where userid=#{userid}
+	</insert>
+	<!-- 카트 비우기 -->
+	<delete id="cartAllDelete" parameterType="String">
+		delete from cart
+		where userid=#{userid}
+	</delete>
+	<!-- 특정 유저의 주문 목록 -->
+	<select id="orderList" parameterType="String" resultType="oddto">
+ 		select od.c_color,od.c_size,od.c_qty,
+		o.order_id,o_date,
+		p.pro_photo,p.pro_name,
+		(od.c_qty*p.price) as qty_price
+		from order_detail od
+		join tb_order o on od.order_id=o.order_id
+		join product p on od.pro_id=p.pro_id
+		where orderer=#{orderer}
+	</select>
+</mapper>

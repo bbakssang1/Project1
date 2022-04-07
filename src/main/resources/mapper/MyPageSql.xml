@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="data.mapper.MyPageMapper">
+	<select id="getUser" parameterType="String" resultType="mdto">
+ 		select * from lmember where id=#{id}
+ 	</select>
+ 	
+ 	<update id="updateMember" parameterType="mdto">
+		update lmember set pass=#{pass},email=#{email},addrnum=#{addrnum},addr=#{addr},addrdetail=#{addrdetail},hp=#{hp},height=#{height},weight=#{weight} where id=#{id}
+	</update>
+	
+	<select id="passEqual" parameterType="HashMap" resultType="int">
+		select count(*) from lmember where pass=#{pass} and id=#{id}
+	</select>
+	
+	<delete id="deleteUser" parameterType="HashMap">
+		delete from lmember where id=#{id} and pass=#{pass}
+	</delete>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+

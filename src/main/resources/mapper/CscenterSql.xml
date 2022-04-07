@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="data.mapper.CscenterMapper">
+	<insert id="insertNotice" parameterType="ndto">
+		insert into notice (nsubject,ncontent,noticetype,writeday)
+		values (#{nsubject},#{ncontent},#{noticetype},now()) 
+	</insert>
+	<select id="getTotalCount" resultType="int">
+		select count(*) from notice
+	</select>
+	<select id="getMaxNum" resultType="int">
+		select ifnull(max,(num),0) from notice
+	</select>
+	<select id="noticeList" parameterType="HashMap" resultType="ndto">
+		select * from notice order by num desc limit #{start},#{perpage}
+	</select>
+	<select id="getNoticeData" parameterType="String" resultType="ndto">
+		select * from notice where num=#{num}
+	</select>
+	<update id="updateNotice" parameterType="ndto">
+		update notice set noticetype=#{noticetype},nsubject=#{nsubject},ncontent=#{ncontent} where num=#{num}
+	</update>
+	<delete id="deleteNotice" parameterType="String">
+		delete from notice where num=#{num}
+	</delete>
+
+	<insert id="insertFaq" parameterType="fdto">
+		insert into faq (ftitle,fcontent,faqtype,writeday)
+		values (#{ftitle},#{fcontent},#{faqtype},now())
+	</insert>
+	
+	<select id="getfaqTotalCount" resultType="int">
+		select count(*) from faq
+	</select> 
+	<select id="getfaqMaxNum" resultType="int">
+		select ifnull(max,(num),0) from faq
+	</select>
+	<select id="faqList" parameterType="HashMap" resultType="fdto">
+		select * from faq order by num desc limit #{start},#{perpage}
+	</select>
+	<select id="getfaqData" parameterType="String" resultType="fdto">
+		select * from faq where num=#{num}
+	</select>
+	<update id="updateFaq" parameterType="fdto">
+		update faq set faqtype=#{faqtype},ftitle=#{ftitle},fcontent=#{fcontent} where num=#{num}
+	</update>
+	<delete id="deleteFaq" parameterType="String">
+		delete from faq where num=#{num}
+	</delete>
+	<select id="deliverList" parameterType="HashMap" resultType="fdto">
+		select * from faq where faqtype = '배송' order by num desc limit #{start}, #{perpage} 
+	</select>
+	<select id="orderList" parameterType="HashMap" resultType="fdto">
+		select * from faq where faqtype = '주문/결제' order by num desc limit #{start}, #{perpage} 
+	</select>
+	<select id="cancelList" parameterType="HashMap" resultType="fdto">
+		select * from faq where faqtype = '취소/반품/교환' order by num desc limit #{start}, #{perpage} 
+	</select>
+	<select id="receiptList" parameterType="HashMap" resultType="fdto">
+		select * from faq where faqtype = '영수증/세금계산서' order by num desc limit #{start}, #{perpage} 
+	</select>
+	<select id="meminfoList" parameterType="HashMap" resultType="fdto">
+		select * from faq where faqtype = '회원정보/서비스' order by num desc limit #{start}, #{perpage} 
+	</select>
+	<select id="couponList" parameterType="HashMap" resultType="fdto">
+		select * from faq where faqtype = '쿠폰/마일리지' order by num desc limit #{start}, #{perpage} 
+	</select>
+	<select id="etcList" parameterType="HashMap" resultType="fdto">
+		select * from faq where faqtype = '기타' order by num desc limit #{start}, #{perpage} 
+	</select>
+	
+	<insert id="insertInquiry" parameterType="idto">
+		insert into inquiryboard (myid,name,itype,hp,email,ititle,icontent,uploadfile,writeday) 
+		values (#{myid},#{name},#{itype},#{hp},#{email},#{ititle},#{icontent},#{uploadfile},now())
+	</insert>
+	<select id="getInqTotalCount" resultType="int">
+		select count(*) from inquiryboard
+	</select>
+	<select id="getInqMaxNum" resultType="int">
+		select ifnull(max(num),0) from inquiryboard
+	</select>
+	<select id="getInqList" parameterType="HashMap" resultType="idto">
+		select * from inquiryboard order by num desc limit #{start},#{perpage}
+	</select>
+	<select id="getInqData" parameterType="String" resultType="idto">
+		select * from inquiryboard where num=#{num}
+	</select>
+	<update id="updateAcount" parameterType="idto">
+		update inquiryboard set acount=acount+1 where num=#{num}
+	</update>
+</mapper>

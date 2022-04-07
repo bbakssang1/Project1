@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="data.mapper.CartMapper">
+	<!-- 장바구니 담기 -->
+	<insert id="addCart" parameterType="cdto">
+		insert into cart (userid,pro_id,c_size,c_qty,c_color,c_adddate) values (#{userid},#{pro_id},#{c_size},#{c_qty},#{c_color},now())
+	</insert>
+	<!-- 카트 리스트 -->
+	<select id="cartList" parameterType="String" resultType="cdto">
+		select c.c_idx,c.pro_id,c.c_size,c.c_qty,c.c_color,c.c_adddate,
+		p.pro_name,p.pro_photo,p.price
+		from cart c join product p on c.pro_id=p.pro_id
+		where c.userid=#{userid} order by c_idx desc;
+		<!-- select c.c_idx,c.pro_id,c.c_size,sum(c.c_qty),c.c_color,c.c_adddate,
+		p.pro_name,p.pro_photo,p.price
+		from cart c join product p on c.pro_id=p.pro_id
+		where c.userid=#{userid} group by c_size,c_color order by c.c_idx desc -->
+	</select>
+	<select id="totalPriceAndCnt" parameterType="String" resultType="cdto">
+		select c.userid,sum(c.c_qty*p.price) as totalprice,count(*) as cartcnt
+		from cart c join product p on c.pro_id=p.pro_id
+		where userid=#{userid}
+	</select>
+	<delete id="deleteCart" parameterType="cdto">
+		delete from cart where c_idx=#{c_idx} and userid=#{userid}
+	</delete>
+	<select id="orderList" parameterType="String" resultMap="cdto">
+	select sum(c.c_qty*p.price) as totalprice,count(*) as cartcnt,
+	m.name as m_name,m.hp as m_hp,m.addrnum as m_addrnum,m.addr as m_addr,m.addrdetail as m_addrdetail,m.email as m_email
+	from cart c join lmember m on c.userid=m.id
+	join product p on c.pro_id=p.pro_id
+	where userid=#{userid}
+	</select>
+	<resultMap type="cdto" id="cdto">
+		<result column="c_idx" property="c_idx"/>
+		<result column="userid" property="userid"/>
+		<result column="pro_id" property="pro_id"/>
+		<result column="c_size" property="c_size"/>
+		<result column="c_color" property="c_color"/>
+		<result column="c_qty" property="c_qty"/>
+		<result column="c_adddate" property="c_adddate"/>
+	</resultMap>
+	<resultMap type="pdto" id="pdto">
+		<result column="pro_name" property="pro_name"/>
+		<result column="pro_photo" property="pro_photo"/>
+		<result column="price" property="price"/>
+		<result column="pro_id" property="pro_id"/>
+		<collection property="joinproduct" resultMap="cdto"/>
+	</resultMap>
+</mapper>

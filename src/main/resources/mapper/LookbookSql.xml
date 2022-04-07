@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="data.mapper.LookMapper">
+
+	<insert id="insertLook" parameterType="lodto">
+		insert into lookbook (look_id, look_name, look_photo, look_content, ipgoday) values (#{look_id},#{look_name},#{look_photo}, #{look_content}, now())
+	</insert>
+
+	<select id="getTotalCount" resultType="int">
+		select count(*) from lookbook
+ 	</select>
+ 	
+ 	<select id="getAllLists" parameterType="HashMap" resultType="lodto">
+ 		select * from lookbook order by num desc limit #{start},#{perpage}
+ 	</select>
+ 	
+ 	<select id="getData" parameterType="String" resultType="lodto">
+ 		select * from lookbook where num=#{num}
+ 	</select>
+
+	<update id="updateReadCount" parameterType="String">
+      	update lookbook set readcount=readcount+1 where num=#{num}
+    </update>
+    
+    <select id="getLookIdCheck" parameterType="String" resultType="int">
+		select count(*) from lookbook where look_id=#{look_id}
+	</select>
+</mapper>
